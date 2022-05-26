@@ -1,13 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.GOAP
 {
-    public abstract class GoapAction : MonoBehaviour
+    public abstract class GoapAction : MonoBehaviour, //TODO: Reconsider this being a monobehavior
+        IEquatable<GoapAction>
     {
-        private HashSet<KeyValuePair<string, object>> preconditions;
-        private HashSet<KeyValuePair<string, object>> effects;
+        private Dictionary<string, object> preconditions;
+        private Dictionary<string, object> effects;
 
         private bool inRange = false;
 
@@ -22,8 +24,8 @@ namespace Assets.Scripts.GOAP
 
         public GoapAction()
         {
-            preconditions = new HashSet<KeyValuePair<string, object>>();
-            effects = new HashSet<KeyValuePair<string, object>>();
+            preconditions = new Dictionary<string, object>();
+            effects = new Dictionary<string, object>();
         }
 
         public void DoReset()
@@ -78,31 +80,34 @@ namespace Assets.Scripts.GOAP
 
         public void AddPrecondition(string key, object value)
         {
-            preconditions.Add(new KeyValuePair<string, object>(key, value));
+            preconditions.Add(key, value);
         }
 
 
         public void RemovePrecondition(string key)
         {
-            preconditions.RemoveWhere(kvp => kvp.Key.Equals(key,System.StringComparison.Ordinal));
+            preconditions.Remove(key);
         }
 
 
         public void AddEffect(string key, object value)
         {
-            effects.Add(new KeyValuePair<string, object>(key, value));
+            effects.Add(key, value);
         }
 
 
         public void RemoveEffect(string key)
         {
-            KeyValuePair<string, object> remove = default(KeyValuePair<string, object>);
-            effects.RemoveWhere(kvp => kvp.Key.Equals(key, System.StringComparison.Ordinal));
+            effects.Remove(key);
         }
 
+        public bool Equals(GoapAction other)
+        {
+            return this.GetHashCode() == other.GetHashCode();
+        }
 
-        public HashSet<KeyValuePair<string, object>> Preconditions => preconditions;
+        public Dictionary<string, object> Preconditions => preconditions;
 
-        public HashSet<KeyValuePair<string, object>> Effects => effects;
+        public Dictionary<string, object> Effects => effects;
     }
 }
