@@ -10,7 +10,7 @@ namespace Assets.Scripts.GOAP
 {
     public class GoapPlanner
     {
-        public void Plan(GameObject agent, HashSet<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
+        public Stack<GoapAction> Plan(GameObject agent, HashSet<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
         {
             HashSet<GoapAction> useableActions = new HashSet<GoapAction>();
             for (int i = 0; i < availableActions.Count; i++)
@@ -23,20 +23,30 @@ namespace Assets.Scripts.GOAP
                 }
             }
 
-            var start = new Node(parent: null, action: null, worldState);
-            var found = BuildGraph(start, useableActions, goal);
+            var start = new Node(parent: null, action: null, runningCost: 0, worldState);
+
+            var priorityQueue = new PriorityQueue<Node>();
+            var found = BuildGraph(start, priorityQueue, useableActions, goal);
 
             if (!found)
             {
                 Debug.LogWarning("FOUND NO SOLUTION");
             }
 
-            var aStar = new AStar<GoapAction>(start);
+            var node = priorityQueue.Peek();
 
-            aStar.ComputeAStar(this does not work.);
+            var stack = new Stack<GoapAction>();
+
+            while(node != null)
+            {
+                stack.Push(node.Action);
+                node = node.Parent;
+            }
+
+            return stack;
         }
 
-        private bool BuildGraph(Node parent, HashSet<GoapAction> useableActions, Dictionary<string, object> goal)
+        private bool BuildGraph(Node parent, PriorityQueue<Node> priorityQueue, HashSet<GoapAction> useableActions, Dictionary<string, object> goal)
         {
             //TODO: Consider if buildGraph should be fused with AStar here.
             // WE could use the priority queue to check next paths which are cheaper first???
@@ -49,18 +59,18 @@ namespace Assets.Scripts.GOAP
                 {
                     var newWorldState = parent.WorldState.ApplyActionEffects(action.Effects);
 
-                    var node = new Node(parent, action, newWorldState);
+                    var node = new Node(parent, action, parent.RunningCost + action.cost, newWorldState);
 
 
                     if (newWorldState.Satisfy(goal))
                     {
                         foundASolution = true;
-                        parent.AddChildren(node);
+                        priorityQueue.Enqueue(node); // With this the cheapest graph will always be first...
                     }
                     else
                     {
                         var subSet = useableActions.ActionSubSet(action);
-                        var success = BuildGraph(node, subSet, goal);
+                        var success = BuildGraph(node, priorityQueue, subSet, goal);
                         if (success)
                         {
                             foundASolution = true;
@@ -73,63 +83,27 @@ namespace Assets.Scripts.GOAP
         }
     }
 
-    public class Node : IPathfindingGraph<GoapAction>
+    public class Node : IComparable<Node>
     {
-        public Node(Node parent, GoapAction action, Dictionary<string, object> worldState)
+        public Node(Node parent, GoapAction action, float runningCost, Dictionary<string, object> worldState)
         {
             Parent = parent;
-            this.action = action;
+            Action = action;
+            RunningCost = runningCost;
             WorldState = worldState;
         }
         public List<Node> Children = new List<Node>();
 
-        private readonly GoapAction action;
 
         public Node Parent { get; }
+        public GoapAction Action { get; }
+        public float RunningCost { get; }
         public Dictionary<string, object> WorldState { get; }
 
-        public double Heuistic(GoapAction a, GoapAction b)
+        public int CompareTo(Node other)
         {
-            return 0; // not sure what a good heuristic is.
-        }
-
-        public IEnumerable<CoordWithWeight<GoapAction>> Neighbors(CoordWithWeight<GoapAction> current)
-        {
-            for (int i = 0; i < Children.Count; i++)
-            {
-                yield return new CoordWithWeight<GoapAction>(Children[i].action, Children[i].action.cost);
-            }
-        }
-
-        /// <summary>
-        /// Recursively adds children when a goal has been found.
-        /// </summary>
-        /// <param name="child"></param>
-        public void AddChildren(Node child) {
-
-            if (!Children.Contains(child))
-            {
-                Children.Add(child);
-            }
-
-            if (Parent != null)
-            {
-                Parent.AddChildren(this);
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            return action?.GetHashCode() ?? 0;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is Node node)
-            {
-                action.Equals(node.action);
-            }
-            return false;   
+            return this.RunningCost.CompareTo(other.RunningCost);
         }
     }
+    
 }

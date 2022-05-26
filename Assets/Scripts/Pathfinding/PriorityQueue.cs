@@ -40,6 +40,10 @@ namespace Assets.Scripts.Pathfinding
 				ci = pi;
 			}
 		}
+		public T Peek()
+        {
+			return data[0];
+        }
 		public T Dequeue()
 		{
 			int li = data.Count - 1;
