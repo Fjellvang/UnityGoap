@@ -23,35 +23,45 @@ namespace Assets.Scripts.GOAP
                 }
             }
 
-            var start = new Node(null, worldState);
-            var result = BuildGraph(start, useableActions, goal);
+            var start = new Node(parent: null, action: null, worldState);
+            var found = BuildGraph(start, useableActions, goal);
+
+            if (!found)
+            {
+                Debug.LogWarning("FOUND NO SOLUTION");
+            }
+
+            var aStar = new AStar<GoapAction>(start);
+
+            aStar.ComputeAStar(this does not work.);
         }
 
-        private (bool success, List<Node> graph) BuildGraph(Node parent, HashSet<GoapAction> useableActions, Dictionary<string, object> goal)
+        private bool BuildGraph(Node parent, HashSet<GoapAction> useableActions, Dictionary<string, object> goal)
         {
+            //TODO: Consider if buildGraph should be fused with AStar here.
+            // WE could use the priority queue to check next paths which are cheaper first???
+            // And end the search as soon as we found a worldstate which satisfies the goal
+            // So something like storing the nodes in that priority queue with the running cost.
             var foundASolution = false;
-            List<Node> graph = new List<Node>();
             foreach (var action in useableActions)
             {
                 if (action.Preconditions.Satisfy(parent.WorldState))
                 {
                     var newWorldState = parent.WorldState.ApplyActionEffects(action.Effects);
 
-                    var node = new Node(action, newWorldState);
+                    var node = new Node(parent, action, newWorldState);
 
-                    parent.Children.Add(node);
 
                     if (newWorldState.Satisfy(goal))
                     {
                         foundASolution = true;
-                        graph.Add(node);
+                        parent.AddChildren(node);
                     }
                     else
                     {
                         var subSet = useableActions.ActionSubSet(action);
-                        var result = BuildGraph(node, subSet, goal);
-                        graph.AddRange(result.graph);
-                        if (result.success)
+                        var success = BuildGraph(node, subSet, goal);
+                        if (success)
                         {
                             foundASolution = true;
                         }
@@ -59,78 +69,15 @@ namespace Assets.Scripts.GOAP
                 }
             }
 
-            return (foundASolution, graph);
-        }
-    }
-
-    public static class GoapExtensions
-    {
-        public static HashSet<GoapAction> ActionSubSet(this HashSet<GoapAction> actions, GoapAction toExclude)
-        {
-            var copy = new HashSet<GoapAction>();
-            foreach (var action in actions)
-            {
-                if (!action.Equals(toExclude))
-                {
-                    copy.Add(action);
-                }
-            }
-            return copy;
-        }
-        /// <summary>
-        /// Applies the <paramref name="effects"/> to a copy of <paramref name="worldState"/> and returns the copy
-        /// </summary>
-        /// <param name="worldState"></param>
-        /// <param name="effects"></param>
-        /// <returns></returns>
-        public static Dictionary<string, object> ApplyActionEffects(this Dictionary<string, object> worldState, Dictionary<string, object> effects)
-        {
-            //Work on a copy, so we don't change the referenced state.
-            var copy = new Dictionary<string, object>(worldState);
-
-            foreach (var effect in effects)
-            {
-                if (copy.ContainsKey(effect.Key))
-                {
-                    copy[effect.Key] = effect.Value;
-                }
-                else
-                {
-                    copy.Add(effect.Key, effect.Value);
-                }
-            }
-
-            return copy;
-        }
-        /// <summary>
-        /// Returns True if all <paramref name="preconditions"/> are satified by the <paramref name="worldState"/>
-        /// </summary>
-        /// <param name="preconditions"></param>
-        /// <param name="worldState"></param>
-        /// <returns></returns>
-        public static bool Satisfy(this Dictionary<string, object> preconditions, Dictionary<string, object> worldState)
-        {
-            var conditionSatisfied = true;
-            foreach (var pre in preconditions)
-            {
-                // all preconditions must be satified.
-                if (worldState.ContainsKey(pre.Key) && pre.Value == worldState[pre.Key])
-                {
-                    conditionSatisfied &= true;
-                }
-                else
-                {
-                    conditionSatisfied &= false;
-                }
-            }
-            return conditionSatisfied;
+            return foundASolution;
         }
     }
 
     public class Node : IPathfindingGraph<GoapAction>
     {
-        public Node(GoapAction action, Dictionary<string, object> worldState)
+        public Node(Node parent, GoapAction action, Dictionary<string, object> worldState)
         {
+            Parent = parent;
             this.action = action;
             WorldState = worldState;
         }
@@ -138,6 +85,7 @@ namespace Assets.Scripts.GOAP
 
         private readonly GoapAction action;
 
+        public Node Parent { get; }
         public Dictionary<string, object> WorldState { get; }
 
         public double Heuistic(GoapAction a, GoapAction b)
@@ -151,6 +99,37 @@ namespace Assets.Scripts.GOAP
             {
                 yield return new CoordWithWeight<GoapAction>(Children[i].action, Children[i].action.cost);
             }
+        }
+
+        /// <summary>
+        /// Recursively adds children when a goal has been found.
+        /// </summary>
+        /// <param name="child"></param>
+        public void AddChildren(Node child) {
+
+            if (!Children.Contains(child))
+            {
+                Children.Add(child);
+            }
+
+            if (Parent != null)
+            {
+                Parent.AddChildren(this);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return action?.GetHashCode() ?? 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Node node)
+            {
+                action.Equals(node.action);
+            }
+            return false;   
         }
     }
 }
