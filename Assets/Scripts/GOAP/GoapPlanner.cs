@@ -48,7 +48,7 @@ namespace Assets.Scripts.GOAP
 
         private bool BuildGraph(Node parent, PriorityQueue<Node> priorityQueue, HashSet<GoapAction> useableActions, Dictionary<string, object> goal)
         {
-            //TODO: Consider if buildGraph should be fused with AStar here.
+            // TODO: Consider if buildGraph should be fused with AStar here.
             // WE could use the priority queue to check next paths which are cheaper first???
             // And end the search as soon as we found a worldstate which satisfies the goal
             // So something like storing the nodes in that priority queue with the running cost.
@@ -80,6 +80,77 @@ namespace Assets.Scripts.GOAP
             }
 
             return foundASolution;
+        }
+        public Queue<GoapAction> PlanWithAStar(GameObject agent, HashSet<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
+        {
+            HashSet<GoapAction> useableActions = new HashSet<GoapAction>();
+            for (int i = 0; i < availableActions.Count; i++)
+            {
+                GoapAction goapAction = availableActions.ElementAt(i);
+                goapAction.DoReset();
+                if (goapAction.CheckProceduralPrecondition(agent))
+                {
+                    useableActions.Add(goapAction);
+                }
+            }
+
+            var aStar = new AStar<GoapPrecondition>(new GoapGraph());
+
+            var path = aStar.ComputeAStar(new GoapPrecondition(null, useableActions, worldState), new GoapPrecondition(null, null, goal));
+
+            var actionQueue = new Queue<GoapAction>();
+            var item = path.Pop();
+            while (item != null)
+            {
+                if(item.Action != null)
+                {
+                    actionQueue.Enqueue(item.Action);
+                }
+            }
+
+            return actionQueue;
+        }
+    }
+    //TODO: Rethink the naming for these classes
+    public class GoapPrecondition : IEquatable<GoapPrecondition>
+    {
+        public GoapPrecondition(GoapAction action, HashSet<GoapAction> useableActions, Dictionary<string, object> worldState)
+        {
+            Action = action;
+            UseableActions = useableActions;
+            WorldState = worldState;
+        }
+
+        public Dictionary<string, object> Precondition { get; }
+        public GoapAction Action { get; }
+        public HashSet<GoapAction> UseableActions { get; }
+        public Dictionary<string, object> WorldState { get; }
+
+        public bool Equals(GoapPrecondition other)
+        {
+            return Action.Preconditions.Satisfy(other.WorldState);
+        }
+    }
+
+    public class GoapGraph : IPathfindingGraph<GoapPrecondition>
+    {
+        public double Heuistic(GoapPrecondition a, GoapPrecondition b)
+        {
+            return 0; // The heuistic should be build in as all actions have variable cost
+        }
+
+        public IEnumerable<CoordWithWeight<GoapPrecondition>> Neighbors(CoordWithWeight<GoapPrecondition> current)
+        {
+            foreach(var action in current.Coord.UseableActions)
+            {
+                if (action.Preconditions.Satisfy(current.Coord.Precondition))
+                {
+                    var worldState = current.Coord.WorldState.ApplyActionEffects(action.Effects);
+                    var actionSubSet = current.Coord.UseableActions.ActionSubSet(action);
+                    var GoapPrecondition = new GoapPrecondition(action, actionSubSet, worldState);
+                    yield return new CoordWithWeight<GoapPrecondition>(GoapPrecondition, action.cost);
+                }
+            }
         }
     }
 

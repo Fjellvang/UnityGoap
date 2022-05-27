@@ -1,9 +1,9 @@
 ﻿using Assets.Scripts.GOAP;
 using UnityEngine;
 
-namespace Assets.Scripts.Actions
+namespace Assets.Scripts.Game.Actions
 {
-    public class ChopWoodAction : GoapAction
+    public class GetAxeAction : GoapAction
     {
         public override bool CheckProceduralPrecondition(GameObject agent)
         {
