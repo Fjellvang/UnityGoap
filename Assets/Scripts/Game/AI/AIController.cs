@@ -1,19 +1,32 @@
-﻿using Assets.Scripts.StateMachine;
+﻿using Assets.Scripts.GOAP;
+using Assets.Scripts.StateMachine;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Game.AI
 {
     public class AIController : MonoBehaviour
     {
-        AIStateMachine stateMachine;
+        public AIStateMachine stateMachine;
+
+
+        public HashSet<GoapAction> availableActions; //TODO: Consider incapulation - it's currenly a consequece of our FSM design..
+        public IGoap goapDataProvider; //TODO: Inject this ?
         private void Start()
         {
-            stateMachine = new AIStateMachine();
+            stateMachine = new AIStateMachine(this);
+
+            availableActions = new HashSet<GoapAction>();
+            var actions = GetComponents<GoapAction>();
+            foreach (var action in actions)
+            {
+                availableActions.Add(action);
+            }
         }
 
         private void Update()
         {
-            currentState.Update(this);
+            stateMachine.currentState.Update(this);
         }
     }
 

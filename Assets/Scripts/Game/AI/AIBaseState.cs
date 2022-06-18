@@ -1,22 +1,24 @@
-﻿using Assets.Scripts.StateMachine;
+﻿using Assets.Scripts.GOAP;
+using Assets.Scripts.StateMachine;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.Game.AI
 {
-    public class AIBaseState : BaseState<AIController>
+    public abstract class AIBaseState : BaseState<AIController>
     {
         public static readonly AIFindActionState findActionState = new AIFindActionState();
         public static readonly AIGotoState gotoState = new AIGotoState();
         public static readonly AIPerformActionState performActionState = new AIPerformActionState();
+
+        protected Queue<GoapAction> currentActions;
+
+        protected GoapPlanner goapPlanner = new GoapPlanner(); // Inject with LightInject?
 
         public override void OnEnterState(AIController controller)
         {
         }
 
         public override void OnExitState(AIController controller)
-        {
-        }
-
-        public override void Update(AIController controller)
         {
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.GOAP
 {
-    public static class GoapExtensions
+    public static class GoapExtensions //TODO: I'm not sure extensions are correct here. Consider wrapping in dedicated class?
     {
         public static HashSet<GoapAction> ActionSubSet(this HashSet<GoapAction> actions, GoapAction toExclude)
         {
