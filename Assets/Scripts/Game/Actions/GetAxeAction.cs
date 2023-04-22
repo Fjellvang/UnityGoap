@@ -1,33 +1,46 @@
-﻿using Assets.Scripts.GOAP;
+﻿using Assets.Scripts.GameComponents;
+using Assets.Scripts.GOAP;
 using UnityEngine;
 
 namespace Assets.Scripts.Game.Actions
 {
     public class GetAxeAction : GoapAction
     {
+        bool _collectedAxe = false;
+
+        private float _startTime = 0;
+        public float workDuration = .2f; // seconds
+
+        public GetAxeAction()
+        {
+            AddPrecondition("hasAxe", false);
+            AddEffect("hasAxe", true);// TODO: Use constants for these strings
+        }
         public override bool CheckProceduralPrecondition(GameObject agent)
         {
-            throw new System.NotImplementedException();
+            return CheckProcedualPrecondition<AxeComponent>(agent);
         }
 
-        public override bool IsDone()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override bool IsDone() => _collectedAxe;
 
         public override bool Perform(GameObject agent)
         {
-            throw new System.NotImplementedException();
+            _startTime += Time.deltaTime;
+            if (_startTime >= workDuration)
+            {
+                _collectedAxe = true;
+                // Update the inventory
+                // Use the tools durability etc
+            }
+            return true;
         }
 
-        public override bool RequiresInRange()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override bool RequiresInRange() => true;
 
         public override void ResetGoap()
         {
-            throw new System.NotImplementedException();
+            _collectedAxe = false;
+            _startTime = 0;
         }
     }
 }

@@ -1,33 +1,45 @@
-﻿using Assets.Scripts.GOAP;
+﻿using Assets.Scripts.GameComponents;
+using Assets.Scripts.GOAP;
 using UnityEngine;
 
 namespace Assets.Scripts.Game.Actions
 {
     public class CollectBranchesAction : GoapAction
     {
+        bool _collectedBranches = false;
+
+        private float startTime = 0;
+        public float workDuration = 2; // seconds
+        public CollectBranchesAction()
+        {
+            AddPrecondition("hasFirewood", false);
+            AddEffect("hasFirewood", true);
+        }
         public override bool CheckProceduralPrecondition(GameObject agent)
         {
-            throw new System.NotImplementedException();
+            return CheckProcedualPrecondition<BranchComponent>(agent);
         }
 
-        public override bool IsDone()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override bool IsDone() =>
+            _collectedBranches;
 
         public override bool Perform(GameObject agent)
         {
-            throw new System.NotImplementedException();
+            startTime += Time.deltaTime;
+            if (startTime >= workDuration)
+            {
+                _collectedBranches = true;
+                // Update the inventory
+                // Use the tools durability etc
+            }
+            return true;
         }
 
-        public override bool RequiresInRange()
-        {
-            throw new System.NotImplementedException();
-        }
-
+        public override bool RequiresInRange() => true;
         public override void ResetGoap()
         {
-            throw new System.NotImplementedException();
+            _collectedBranches = false;
+            startTime = 0;
         }
     }
 }

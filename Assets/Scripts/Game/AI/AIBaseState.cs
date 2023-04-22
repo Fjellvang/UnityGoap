@@ -7,12 +7,12 @@ namespace Assets.Scripts.Game.AI
     public abstract class AIBaseState : BaseState<AIController>
     {
         public static readonly AIFindActionState findActionState = new AIFindActionState();
-        public static readonly AIGotoState gotoState = new AIGotoState();
+        public static readonly AIGotoState goToActionState = new AIGotoState();
         public static readonly AIPerformActionState performActionState = new AIPerformActionState();
 
         protected Queue<GoapAction> currentActions;
 
-        protected GoapPlanner goapPlanner = new GoapPlanner(); // Inject with LightInject?
+        protected GoapPlanner goapPlanner = new GoapPlanner(); 
 
         public override void OnEnterState(AIController controller)
         {

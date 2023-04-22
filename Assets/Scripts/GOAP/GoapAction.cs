@@ -109,5 +109,41 @@ namespace Assets.Scripts.GOAP
         public Dictionary<string, object> Preconditions => preconditions;
 
         public Dictionary<string, object> Effects => effects;
+
+        public virtual bool CheckProcedualPrecondition<T>(GameObject agent) where T : MonoBehaviour
+        {
+            // find the nearest tree that we can chop
+            // in a proper solution we would use a quadtree or something similar to find the tree instead of this brute force approach
+            T[] trees = (T[])FindObjectsOfType(typeof(T));
+            T closest = null;
+            float closestDist = 0;
+
+            foreach (T tree in trees)
+            {
+                if (closest == null)
+                {
+                    // first one, so choose it for now
+                    closest = tree;
+                    closestDist = (tree.gameObject.transform.position - agent.transform.position).magnitude;
+                }
+                else
+                {
+                    // is this one closer than the last?
+                    float dist = (tree.gameObject.transform.position - agent.transform.position).magnitude;
+                    if (dist < closestDist)
+                    {
+                        // we found a closer one, use it
+                        closest = tree;
+                        closestDist = dist;
+                    }
+                }
+            }
+            if (closest == null)
+                return false;
+
+            target = closest.gameObject;
+
+            return closest != null;
+        }
     }
 }

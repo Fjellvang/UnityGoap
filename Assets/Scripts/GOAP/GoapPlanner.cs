@@ -12,7 +12,7 @@ namespace Assets.Scripts.GOAP
     {
         public Stack<GoapAction> Plan(GameObject agent, HashSet<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
         {
-            HashSet<GoapAction> useableActions = new HashSet<GoapAction>();
+            HashSet<GoapAction> useableActions = new();
             for (int i = 0; i < availableActions.Count; i++)
             {
                 GoapAction goapAction = availableActions.ElementAt(i);
@@ -96,7 +96,9 @@ namespace Assets.Scripts.GOAP
 
             var aStar = new AStar<GoapPrecondition>(new GoapGraph());
 
-            var path = aStar.ComputeAStar(new GoapPrecondition(null, useableActions, worldState), new GoapPrecondition(null, null, goal));
+            var path = aStar.ComputeAStar(
+                new GoapPrecondition(null, useableActions, worldState),// We should have an action first always.
+                new GoapPrecondition(null, null, goal));
 
             var actionQueue = new Queue<GoapAction>();
             var item = path.Pop();
@@ -121,7 +123,6 @@ namespace Assets.Scripts.GOAP
             WorldState = worldState;
         }
 
-        public Dictionary<string, object> Precondition { get; }
         public GoapAction Action { get; }
         public HashSet<GoapAction> UseableActions { get; }
         public Dictionary<string, object> WorldState { get; }
@@ -143,7 +144,7 @@ namespace Assets.Scripts.GOAP
         {
             foreach(var action in current.Coord.UseableActions)
             {
-                if (action.Preconditions.Satisfy(current.Coord.Precondition))
+                if (action.Preconditions.Satisfy(current.Coord.Action.Preconditions))
                 {
                     var worldState = current.Coord.WorldState.ApplyActionEffects(action.Effects);
                     var actionSubSet = current.Coord.UseableActions.ActionSubSet(action);

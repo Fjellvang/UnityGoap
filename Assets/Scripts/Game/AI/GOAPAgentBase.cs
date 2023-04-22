@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Game.AI
 {
-    public abstract class GOAPBase : MonoBehaviour, IGoap
+    public abstract class GOAPAgentBase : MonoBehaviour, IGoap
     {
         public float moveSpeed = 1;
 
@@ -18,9 +18,11 @@ namespace Assets.Scripts.Game.AI
 
         public Dictionary<string, object> GetWorldState()
         {
-            var worldData = new Dictionary<string, object>();
-            worldData.Add("hasTool", false);
-            worldData.Add("hasFirewood", false);
+            var worldData = new Dictionary<string, object> //TODO: this should'nt be here
+            {
+                { "hasAxe", false },
+                { "hasFirewood", false }
+            };
             return worldData;
         }
 

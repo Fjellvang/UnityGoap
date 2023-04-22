@@ -20,37 +20,7 @@ namespace Assets.Scripts.Game.AI
             }
 
             currentActions = plan;
-            controller.stateMachine.TransitionState(performActionState);
-
-        }
-    }
-
-    public class AIGotoState : AIBaseState
-    {
-        public override void Update(AIController controller)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    public class AIPerformActionState : AIBaseState
-    {
-        public override void Update(AIController controller)
-        {
-            var hasActionPlan = currentActions.Any();
-            if (!hasActionPlan)
-            {
-                Debug.Log("AI Perfomed action");
-                controller.goapDataProvider.ActionsFinished();
-                controller.stateMachine.TransitionState(findActionState);
-                return;
-            }
-
-            var action = currentActions.Peek();
-            if (action.IsDone())
-            {
-                currentActions.Dequeue();
-            }
+            controller.stateMachine.TransitionState(goToActionState);
         }
     }
 }
