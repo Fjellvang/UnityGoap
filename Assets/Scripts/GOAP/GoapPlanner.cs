@@ -32,6 +32,7 @@ namespace Assets.Scripts.GOAP
             if (!found)
             {
                 Debug.LogWarning("FOUND NO SOLUTION");
+                return null;
             }
 
             var node = priorityQueue.Peek();

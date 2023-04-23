@@ -10,7 +10,6 @@ namespace Assets.Scripts.Game.AI
         public static readonly AIGotoState goToActionState = new AIGotoState();
         public static readonly AIPerformActionState performActionState = new AIPerformActionState();
 
-        protected Queue<GoapAction> currentActions;
 
         protected GoapPlanner goapPlanner = new GoapPlanner(); 
 
