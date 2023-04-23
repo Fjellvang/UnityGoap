@@ -10,8 +10,7 @@ namespace Assets.Scripts.Game.AI
     {
         public AIStateMachine stateMachine;
 
-        public HashSet<GoapAction> availableActions; 
-        public GoapAction[] actions; 
+        public List<GoapAction> actions; 
 
         public Queue<GoapAction> currentActions;
 
@@ -19,7 +18,6 @@ namespace Assets.Scripts.Game.AI
         private void Start()
         {
             stateMachine = new AIStateMachine(this);
-            availableActions = actions.ToHashSet();
         }
 
         private void Update()

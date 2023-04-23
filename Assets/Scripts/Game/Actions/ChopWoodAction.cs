@@ -7,9 +7,9 @@ namespace Assets.Scripts.Game.Actions
     [CreateAssetMenu(menuName = "GoapActions/ChopWood")]
     public class ChopWoodAction : GoapAction
     {
-        private bool chopped = false;
+        private bool _chopped = false;
 
-        private float startTime = 0;
+        private float _startTime = 0;
         public float workDuration = 2; // seconds
 
         public ChopWoodAction()
@@ -23,14 +23,14 @@ namespace Assets.Scripts.Game.Actions
             return CheckProcedualPrecondition<TreeComponent>(agent);
         }
 
-        public override bool IsDone => chopped;
+        public override bool IsDone => _chopped;
 
         public override bool Perform(GameObject agent)
         {
-            startTime += Time.deltaTime;
-            if (startTime >= workDuration)
+            _startTime += Time.deltaTime;
+            if (_startTime >= workDuration)
             {
-                chopped = true;
+                _chopped = true;
 
                 Destroy(target);
                 // Update the inventory
@@ -43,8 +43,8 @@ namespace Assets.Scripts.Game.Actions
 
         public override void ResetGoap()
         {
-            chopped = false;
-            startTime = 0;
+            _chopped = false;
+            _startTime = 0;
         }
     }
 }
