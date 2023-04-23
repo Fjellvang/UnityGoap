@@ -13,8 +13,8 @@ namespace Assets.Scripts.Game.Actions
 
         public GetAxeAction()
         {
-            AddPrecondition("hasAxe", false);
-            AddEffect("hasAxe", true);// TODO: Use constants for these strings
+            AddPrecondition(Constants.Actions.HasAxe, false);
+            AddEffect(Constants.Actions.HasAxe, true);
         }
         public override bool CheckProceduralPrecondition(GameObject agent)
         {

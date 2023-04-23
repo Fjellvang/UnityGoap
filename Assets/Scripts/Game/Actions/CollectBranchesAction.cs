@@ -12,8 +12,8 @@ namespace Assets.Scripts.Game.Actions
         public float workDuration = 2; // seconds
         public CollectBranchesAction()
         {
-            AddPrecondition("hasFirewood", false);
-            AddEffect("hasFirewood", true);
+            AddPrecondition(Constants.Actions.HasFirewood, false);
+            AddEffect(Constants.Actions.HasFirewood, true);
         }
         public override bool CheckProceduralPrecondition(GameObject agent)
         {

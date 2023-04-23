@@ -13,9 +13,9 @@ namespace Assets.Scripts.Game.Actions
 
         public ChopWoodAction()
         {
-            AddPrecondition("hasAxe", true); //TODO: GOD DAMN CONSTANTS
-            AddPrecondition("hasFirewood", false);
-            AddEffect("hasFirewood", true);
+            AddPrecondition(Constants.Actions.HasAxe, true); //TODO: GOD DAMN CONSTANTS
+            AddPrecondition(Constants.Actions.HasFirewood, false);
+            AddEffect(Constants.Actions.HasFirewood, true);
         }
         public override bool CheckProceduralPrecondition(GameObject agent)
         {
