@@ -10,10 +10,10 @@ namespace Assets.Scripts.Pathfinding
 	{
         public AStar(IPathfindingGraph<TCoordType> pathfindingGraph)
         {
-            this.pathfindingGraph = pathfindingGraph;
+            this._pathfindingGraph = pathfindingGraph;
         }
 
-        private readonly IPathfindingGraph<TCoordType> pathfindingGraph;
+        private readonly IPathfindingGraph<TCoordType> _pathfindingGraph;
 
 		public Stack<TCoordType> ComputeAStar(TCoordType start, TCoordType goal)
 		{
@@ -28,7 +28,7 @@ namespace Assets.Scripts.Pathfinding
 			{
 				var current = frontier.Dequeue();
 
-				foreach (var point in this.pathfindingGraph.Neighbors(current))
+				foreach (var point in this._pathfindingGraph.Neighbors(current))
 				{
 					//TODO: test if we need early exit?
 					var newCost = costSoFar[current.Coord] + point.Weight;
@@ -45,7 +45,7 @@ namespace Assets.Scripts.Pathfinding
 					{
 						costSoFar[point.Coord] = newCost;
 
-						var priority = newCost + pathfindingGraph.Heuistic(goal, point.Coord);
+						var priority = newCost + _pathfindingGraph.Heuistic(goal, point.Coord);
 						frontier.Enqueue(new CoordWithWeight<TCoordType>(point.Coord, priority));
 
 						cameFrom[point.Coord] = current.Coord;

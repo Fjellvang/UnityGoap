@@ -8,7 +8,7 @@ namespace Assets.Scripts.GOAP
 {
     public class GoapPlanner
     {
-        public Queue<GoapAction> Plan(GameObject agent, List<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
+        public Queue<GoapAction> Plan(GameObject agent, List<GoapAction> availableActions, GoapCondition worldState, GoapCondition goal)
         {
             List<GoapAction> useableActions = new();
             for (int i = 0; i < availableActions.Count; i++)
@@ -57,7 +57,7 @@ namespace Assets.Scripts.GOAP
             return actionQueue;
         }
 
-        private bool BuildGraph(Node parent, PriorityQueue<Node> priorityQueue, List<GoapAction> useableActions, Dictionary<string, object> goal)
+        private bool BuildGraph(Node parent, PriorityQueue<Node> priorityQueue, List<GoapAction> useableActions, GoapCondition goal)
         {
             // TODO: Consider if buildGraph should be fused with AStar here.
             // WE could use the priority queue to check next paths which are cheaper first???
@@ -92,7 +92,7 @@ namespace Assets.Scripts.GOAP
 
             return foundASolution;
         }
-        public Queue<GoapAction> PlanWithAStar(GameObject agent, List<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
+        public Queue<GoapAction> PlanWithAStar(GameObject agent, List<GoapAction> availableActions, GoapCondition worldState, GoapCondition goal)
         {
             List<GoapAction> useableActions = new();
             for (int i = 0; i < availableActions.Count; i++)
@@ -127,7 +127,7 @@ namespace Assets.Scripts.GOAP
     //TODO: Rethink the naming for these classes
     public class GoapPrecondition : IEquatable<GoapPrecondition>
     {
-        public GoapPrecondition(GoapAction action, List<GoapAction> useableActions, Dictionary<string, object> worldState)
+        public GoapPrecondition(GoapAction action, List<GoapAction> useableActions, GoapCondition worldState)
         {
             Action = action;
             UseableActions = useableActions;
@@ -136,7 +136,7 @@ namespace Assets.Scripts.GOAP
 
         public GoapAction Action { get; }
         public List<GoapAction> UseableActions { get; }
-        public Dictionary<string, object> WorldState { get; }
+        public GoapCondition WorldState { get; }
 
         // To use this in my aStart i cannot have this equality check.
         public bool Equals(GoapPrecondition other)
@@ -174,7 +174,7 @@ namespace Assets.Scripts.GOAP
 
     public class Node : IComparable<Node>
     {
-        public Node(Node parent, GoapAction action, float runningCost, Dictionary<string, object> worldState)
+        public Node(Node parent, GoapAction action, float runningCost, GoapCondition worldState)
         {
             Parent = parent;
             Action = action;
@@ -187,7 +187,7 @@ namespace Assets.Scripts.GOAP
         public Node Parent { get; }
         public GoapAction Action { get; }
         public float RunningCost { get; }
-        public Dictionary<string, object> WorldState { get; }
+        public GoapCondition WorldState { get; }
 
         public int CompareTo(Node other)
         {

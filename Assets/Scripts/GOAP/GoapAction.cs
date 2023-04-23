@@ -1,14 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.GOAP
 {
+
     public abstract class GoapAction : ScriptableObject,
         IEquatable<GoapAction>
     {
-        private Dictionary<string, object> _preconditions;
+        private GoapCondition _preconditions;
         private Dictionary<string, object> _effects;
 
         private bool _inRange = false;
@@ -24,7 +24,7 @@ namespace Assets.Scripts.GOAP
 
         public GoapAction()
         {
-            _preconditions = new Dictionary<string, object>();
+            _preconditions = new GoapCondition();
             _effects = new Dictionary<string, object>();
         }
 
@@ -80,13 +80,13 @@ namespace Assets.Scripts.GOAP
 
         public void AddPrecondition(string key, object value)
         {
-            _preconditions.Add(key, value);
+            _preconditions.AddCondition(key, value);
         }
 
 
         public void RemovePrecondition(string key)
         {
-            _preconditions.Remove(key);
+            _preconditions.RemoveCondition(key);
         }
 
 
@@ -106,7 +106,7 @@ namespace Assets.Scripts.GOAP
             return this.GetHashCode() == other.GetHashCode();
         }
 
-        public Dictionary<string, object> Preconditions => _preconditions;
+        public GoapCondition Preconditions => _preconditions;
 
         public Dictionary<string, object> Effects => _effects;
 

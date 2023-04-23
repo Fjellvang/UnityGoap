@@ -12,25 +12,25 @@ namespace Assets.Scripts.GOAP
 		 * The starting state of the Agent and the world.
 		 * Supply what states are needed for actions to run.
 		 */
-		Dictionary<string, object> GetWorldState();
+		GoapCondition GetWorldState();
 
 		/**
 		 * Give the planner a new goal so it can figure out 
 		 * the actions needed to fulfill it.
 		 */
-		Dictionary<string, object> CreateGoalState();
+		GoapCondition CreateGoalState();
 
 		/**
 		 * No sequence of actions could be found for the supplied goal.
 		 * You will need to try another goal
 		 */
-		void PlanFailed(Dictionary<string, object> failedGoal);
+		void PlanFailed(GoapCondition failedGoal);
 
 		/**
 		 * A plan was found for the supplied goal.
 		 * These are the actions the Agent will perform, in order.
 		 */
-		void PlanFound(Dictionary<string, object> goal, Queue<GoapAction> actions);
+		void PlanFound(GoapCondition goal, Queue<GoapAction> actions);
 
 		/**
 		 * All actions are complete and the goal was reached. Hooray!

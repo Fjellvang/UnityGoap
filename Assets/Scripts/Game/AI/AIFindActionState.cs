@@ -10,8 +10,8 @@ namespace Assets.Scripts.Game.AI
             var worldState = controller.goapDataProvider.GetWorldState();
             var goal = controller.goapDataProvider.CreateGoalState();
 
-            //var plan = goapPlanner.PlanWithAStar(controller.gameObject, controller.availableActions, worldState, goal);
-            var plan = goapPlanner.Plan(controller.gameObject, controller.actions, worldState, goal);  
+            //var plan = goapPlanner.PlanWithAStar(controller.gameObject, controller.actions, worldState, goal);
+            var plan = goapPlanner.Plan(controller.gameObject, controller.actions, worldState, goal);
 
             if (plan == null)
             {

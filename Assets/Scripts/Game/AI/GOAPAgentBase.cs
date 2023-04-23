@@ -14,9 +14,9 @@ namespace Assets.Scripts.Game.AI
             Debug.Log("<color=blue>Actions completed</color>");
         }
 
-        public abstract Dictionary<string, object> CreateGoalState();
+        public abstract GoapCondition CreateGoalState();
 
-        public abstract Dictionary<string, object> GetWorldState();
+        public abstract GoapCondition GetWorldState();
 
         public bool MoveAgent(GoapAction nextAction)
         {
@@ -42,14 +42,14 @@ namespace Assets.Scripts.Game.AI
             Debug.Log($"Plan aborted: {aborter.GetType().Name}");
         }
 
-        public void PlanFailed(Dictionary<string, object> failedGoal)
+        public void PlanFailed(GoapCondition failedGoal)
         {
             Debug.Log("Plan failed called");
         }
 
-        public void PlanFound(Dictionary<string, object> goal, Queue<GoapAction> actions)
+        public void PlanFound(GoapCondition goal, Queue<GoapAction> actions)
         {
-            Debug.Log($"Found Actions for goal: {string.Join(", ", goal.Keys.Select(x => x))}\nActions: {string.Join(", ", actions.Select(x => x.GetType().Name))}");
+            Debug.Log($"Found Actions for goal \nActions: {string.Join(", ", actions.Select(x => x.GetType().Name))}");
 
         }
     }
