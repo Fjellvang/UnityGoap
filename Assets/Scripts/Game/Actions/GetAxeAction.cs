@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Game.Actions
 {
+    [CreateAssetMenu(menuName = "GoapActions/GetAxe")]
     public class GetAxeAction : GoapAction
     {
         bool _collectedAxe = false;

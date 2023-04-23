@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Assets.Scripts.GOAP
 {
-    public abstract class GoapAction : MonoBehaviour, //TODO: Reconsider this being a monobehavior
+    public abstract class GoapAction : ScriptableObject,
         IEquatable<GoapAction>
     {
-        private Dictionary<string, object> preconditions;
-        private Dictionary<string, object> effects;
+        private Dictionary<string, object> _preconditions;
+        private Dictionary<string, object> _effects;
 
-        private bool inRange = false;
+        private bool _inRange = false;
 
         /* The cost of performing the action.
          * Figure out a weight that suits the action.
@@ -24,13 +24,13 @@ namespace Assets.Scripts.GOAP
 
         public GoapAction()
         {
-            preconditions = new Dictionary<string, object>();
-            effects = new Dictionary<string, object>();
+            _preconditions = new Dictionary<string, object>();
+            _effects = new Dictionary<string, object>();
         }
 
         public void DoReset()
         {
-            inRange = false;
+            _inRange = false;
             target = null;
             ResetGoap();
         }
@@ -70,35 +70,35 @@ namespace Assets.Scripts.GOAP
          * Are we in range of the target?
          * The MoveTo state will set this and it gets reset each time this action is performed.
          */
-        public bool IsInRange() => inRange;
+        public bool IsInRange() => _inRange;
 
         public void SetInRange(bool inRange)
         {
-            this.inRange = inRange;
+            this._inRange = inRange;
         }
 
 
         public void AddPrecondition(string key, object value)
         {
-            preconditions.Add(key, value);
+            _preconditions.Add(key, value);
         }
 
 
         public void RemovePrecondition(string key)
         {
-            preconditions.Remove(key);
+            _preconditions.Remove(key);
         }
 
 
         public void AddEffect(string key, object value)
         {
-            effects.Add(key, value);
+            _effects.Add(key, value);
         }
 
 
         public void RemoveEffect(string key)
         {
-            effects.Remove(key);
+            _effects.Remove(key);
         }
 
         public bool Equals(GoapAction other)
@@ -106,9 +106,9 @@ namespace Assets.Scripts.GOAP
             return this.GetHashCode() == other.GetHashCode();
         }
 
-        public Dictionary<string, object> Preconditions => preconditions;
+        public Dictionary<string, object> Preconditions => _preconditions;
 
-        public Dictionary<string, object> Effects => effects;
+        public Dictionary<string, object> Effects => _effects;
 
         public virtual bool CheckProcedualPrecondition<T>(GameObject agent) where T : MonoBehaviour
         {

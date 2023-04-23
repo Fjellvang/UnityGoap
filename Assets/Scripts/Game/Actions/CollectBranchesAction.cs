@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Game.Actions
 {
+    [CreateAssetMenu(menuName = "GoapActions/CollectBranches")]
     public class CollectBranchesAction : GoapAction
     {
         bool _collectedBranches = false;

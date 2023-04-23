@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Game.Actions
 {
+    [CreateAssetMenu(menuName = "GoapActions/ChopWood")]
     public class ChopWoodAction : GoapAction
     {
         private bool chopped = false;

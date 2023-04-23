@@ -10,7 +10,8 @@ namespace Assets.Scripts.Game.AI
     {
         public AIStateMachine stateMachine;
 
-        public HashSet<GoapAction> availableActions; //TODO: Consider incapulation - it's currenly a consequece of our FSM design..
+        public HashSet<GoapAction> availableActions; 
+        public GoapAction[] actions; 
 
         public Queue<GoapAction> currentActions;
 
@@ -18,8 +19,6 @@ namespace Assets.Scripts.Game.AI
         private void Start()
         {
             stateMachine = new AIStateMachine(this);
-
-            var actions = GetComponents<GoapAction>();
             availableActions = actions.ToHashSet();
         }
 
