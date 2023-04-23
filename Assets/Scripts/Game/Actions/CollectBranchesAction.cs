@@ -29,6 +29,7 @@ namespace Assets.Scripts.Game.Actions
             if (startTime >= workDuration)
             {
                 _collectedBranches = true;
+                Destroy(target);
                 // Update the inventory
                 // Use the tools durability etc
             }

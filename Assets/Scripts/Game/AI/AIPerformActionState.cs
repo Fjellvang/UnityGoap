@@ -7,7 +7,7 @@ namespace Assets.Scripts.Game.AI
     {
         public override void Update(AIController controller)
         {
-            var hasActionPlan = currentActions.Any();
+            var hasActionPlan = controller.currentActions.Any();
             if (!hasActionPlan)
             {
                 Debug.Log("AI Perfomed action");
@@ -16,10 +16,10 @@ namespace Assets.Scripts.Game.AI
                 return;
             }
 
-            var action = currentActions.Peek();
+            var action = controller.currentActions.Peek();
             if (action.IsDone())
             {
-                currentActions.Dequeue();
+                controller.currentActions.Dequeue();
             }
 
             var inRange = !action.RequiresInRange() || action.IsInRange();

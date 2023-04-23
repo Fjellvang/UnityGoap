@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.GOAP
 {
@@ -49,20 +50,16 @@ namespace Assets.Scripts.GOAP
         /// <returns></returns>
         public static bool Satisfy(this Dictionary<string, object> preconditions, Dictionary<string, object> worldState)
         {
-            var conditionSatisfied = true;
             foreach (var pre in preconditions)
             {
-                // all preconditions must be satified.
-                if (worldState.ContainsKey(pre.Key) && pre.Value == worldState[pre.Key])
+                bool precondictionSatisfied = worldState.TryGetValue(pre.Key, out var val) && pre.Value.Equals(val);
+                if (!precondictionSatisfied)
                 {
-                    conditionSatisfied &= true;
-                }
-                else
-                {
-                    conditionSatisfied &= false;
+                    // all preconditions must be satified.
+                    return false;
                 }
             }
-            return conditionSatisfied;
+            return true;
         }
     }
 }

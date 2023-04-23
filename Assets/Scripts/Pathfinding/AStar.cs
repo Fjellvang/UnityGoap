@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Assets.Scripts.GOAP;
+using System;
 using System.Collections.Generic;
 
 namespace Assets.Scripts.Pathfinding
 {
+	//TODO: This is too generic and doesn't work with goap refactor.
     public class AStar<TCoordType>
-		where TCoordType : IEquatable<TCoordType>
+		where TCoordType : GoapPrecondition
 	{
         public AStar(IPathfindingGraph<TCoordType> pathfindingGraph)
         {
@@ -15,7 +17,7 @@ namespace Assets.Scripts.Pathfinding
 
 		public Stack<TCoordType> ComputeAStar(TCoordType start, TCoordType goal)
 		{
-            Stack<TCoordType> path = new Stack<TCoordType>();
+            Stack<TCoordType> path = new();
 			var frontier = new PriorityQueue<CoordWithWeight<TCoordType>>();
 			var cameFrom = new Dictionary<TCoordType, TCoordType>();
 			var costSoFar = new Dictionary<TCoordType, double>();
@@ -31,7 +33,7 @@ namespace Assets.Scripts.Pathfinding
 					//TODO: test if we need early exit?
 					var newCost = costSoFar[current.Coord] + point.Weight;
 
-					if (point.Coord.Equals(goal))
+					if (point.Coord.Action.Preconditions.Satisfy(goal.WorldState))
 					{
 						goalFound = true;
 						cameFrom[point.Coord] = current.Coord;

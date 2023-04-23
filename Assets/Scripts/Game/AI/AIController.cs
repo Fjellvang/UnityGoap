@@ -12,6 +12,8 @@ namespace Assets.Scripts.Game.AI
 
         public HashSet<GoapAction> availableActions; //TODO: Consider incapulation - it's currenly a consequece of our FSM design..
 
+        public Queue<GoapAction> currentActions;
+
         public GOAPAgentBase goapDataProvider; 
         private void Start()
         {

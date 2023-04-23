@@ -30,6 +30,8 @@ namespace Assets.Scripts.Game.Actions
             if (startTime >= workDuration)
             {
                 chopped = true;
+
+                Destroy(target);
                 // Update the inventory
                 // Use the tools durability etc
             }

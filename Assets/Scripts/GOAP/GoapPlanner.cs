@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Pathfinding;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Assets.Scripts.GOAP
 {
     public class GoapPlanner
     {
-        public Stack<GoapAction> Plan(GameObject agent, HashSet<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
+        public Queue<GoapAction> Plan(GameObject agent, HashSet<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
         {
             HashSet<GoapAction> useableActions = new();
             for (int i = 0; i < availableActions.Count; i++)
@@ -39,11 +40,23 @@ namespace Assets.Scripts.GOAP
 
             while(node != null)
             {
-                stack.Push(node.Action);
+                if (node.Action != null)
+                {
+                    stack.Push(node.Action);
+                }
                 node = node.Parent;
             }
 
-            return stack;
+            //TODO: refactor this mess
+            var actionQueue = new Queue<GoapAction>();
+            var item = stack.Pop();
+            while (item != null)
+            {
+                actionQueue.Enqueue(item);
+                stack.TryPop(out item);
+            }
+
+            return actionQueue;
         }
 
         private bool BuildGraph(Node parent, PriorityQueue<Node> priorityQueue, HashSet<GoapAction> useableActions, Dictionary<string, object> goal)
@@ -62,7 +75,7 @@ namespace Assets.Scripts.GOAP
                     var node = new Node(parent, action, parent.RunningCost + action.cost, newWorldState);
 
 
-                    if (newWorldState.Satisfy(goal))
+                    if (goal.Satisfy(newWorldState))
                     {
                         foundASolution = true;
                         priorityQueue.Enqueue(node); // With this the cheapest graph will always be first...
@@ -83,7 +96,7 @@ namespace Assets.Scripts.GOAP
         }
         public Queue<GoapAction> PlanWithAStar(GameObject agent, HashSet<GoapAction> availableActions, Dictionary<string, object> worldState, Dictionary<string, object> goal)
         {
-            HashSet<GoapAction> useableActions = new HashSet<GoapAction>();
+            HashSet<GoapAction> useableActions = new();
             for (int i = 0; i < availableActions.Count; i++)
             {
                 GoapAction goapAction = availableActions.ElementAt(i);
@@ -97,8 +110,8 @@ namespace Assets.Scripts.GOAP
             var aStar = new AStar<GoapPrecondition>(new GoapGraph());
 
             var path = aStar.ComputeAStar(
-                new GoapPrecondition(null, useableActions, worldState),// We should have an action first always.
-                new GoapPrecondition(null, null, goal));
+                new GoapPrecondition(useableActions.First(), useableActions, worldState),// We should have an action first always.
+                new GoapPrecondition(null, null, goal)); ;
 
             var actionQueue = new Queue<GoapAction>();
             var item = path.Pop();
@@ -127,9 +140,15 @@ namespace Assets.Scripts.GOAP
         public HashSet<GoapAction> UseableActions { get; }
         public Dictionary<string, object> WorldState { get; }
 
+        // To use this in my aStart i cannot have this equality check.
         public bool Equals(GoapPrecondition other)
         {
-            return Action.Preconditions.Satisfy(other.WorldState);
+            return Action == other.Action;
+        }
+
+        public override int GetHashCode()
+        {
+            return Action.GetHashCode();
         }
     }
 

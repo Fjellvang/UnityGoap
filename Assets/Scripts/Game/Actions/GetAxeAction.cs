@@ -29,6 +29,7 @@ namespace Assets.Scripts.Game.Actions
             if (_startTime >= workDuration)
             {
                 _collectedAxe = true;
+                Destroy(target);
                 // Update the inventory
                 // Use the tools durability etc
             }
