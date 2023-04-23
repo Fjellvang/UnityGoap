@@ -14,4 +14,13 @@ public class GOAPHasfirewood : GOAPAgentBase
             { "hasFirewood", true }
         };
     }
+
+    public override Dictionary<string, object> GetWorldState() // Todo this should probably be abstracted to a service or something
+    {
+        return new Dictionary<string, object> 
+        {
+            { "hasAxe", false },
+            { "hasFirewood", false }
+        };
+    }
 }

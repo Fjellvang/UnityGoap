@@ -23,7 +23,7 @@ namespace Assets.Scripts.Game.Actions
             return CheckProcedualPrecondition<TreeComponent>(agent);
         }
 
-        public override bool IsDone() => chopped;
+        public override bool IsDone => chopped;
 
         public override bool Perform(GameObject agent)
         {
@@ -39,7 +39,7 @@ namespace Assets.Scripts.Game.Actions
             return true;
         }
 
-        public override bool RequiresInRange() => true;
+        public override bool RequiresInRange => true;
 
         public override void ResetGoap()
         {

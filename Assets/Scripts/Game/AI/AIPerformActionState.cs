@@ -17,12 +17,12 @@ namespace Assets.Scripts.Game.AI
             }
 
             var action = controller.currentActions.Peek();
-            if (action.IsDone())
+            if (action.IsDone)
             {
                 controller.currentActions.Dequeue();
             }
 
-            var inRange = !action.RequiresInRange() || action.IsInRange();
+            var inRange = !action.RequiresInRange || action.IsInRange();
 
             if (inRange)
             {

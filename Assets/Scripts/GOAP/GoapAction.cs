@@ -43,7 +43,7 @@ namespace Assets.Scripts.GOAP
         /**
          * Is the action done?
          */
-        public abstract bool IsDone();
+        public abstract bool IsDone { get; }
 
         /**
          * Procedurally check if this action can run. Not all actions
@@ -63,7 +63,7 @@ namespace Assets.Scripts.GOAP
          * Does this action need to be within range of a target game object?
          * If not then the moveTo state will not need to run for this action.
          */
-        public abstract bool RequiresInRange();
+        public abstract bool RequiresInRange { get; }
 
 
         /**

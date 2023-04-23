@@ -16,15 +16,7 @@ namespace Assets.Scripts.Game.AI
 
         public abstract Dictionary<string, object> CreateGoalState();
 
-        public Dictionary<string, object> GetWorldState()
-        {
-            var worldData = new Dictionary<string, object> //TODO: this should'nt be here
-            {
-                { "hasAxe", false },
-                { "hasFirewood", false }
-            };
-            return worldData;
-        }
+        public abstract Dictionary<string, object> GetWorldState();
 
         public bool MoveAgent(GoapAction nextAction)
         {

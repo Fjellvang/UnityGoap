@@ -9,7 +9,7 @@ namespace Assets.Scripts.Game.Actions
     {
         bool _collectedBranches = false;
 
-        private float startTime = 0;
+        private float _startTime = 0;
         public float workDuration = 2; // seconds
         public CollectBranchesAction()
         {
@@ -21,13 +21,13 @@ namespace Assets.Scripts.Game.Actions
             return CheckProcedualPrecondition<BranchComponent>(agent);
         }
 
-        public override bool IsDone() =>
+        public override bool IsDone =>
             _collectedBranches;
 
         public override bool Perform(GameObject agent)
         {
-            startTime += Time.deltaTime;
-            if (startTime >= workDuration)
+            _startTime += Time.deltaTime;
+            if (_startTime >= workDuration)
             {
                 _collectedBranches = true;
                 Destroy(target);
@@ -37,11 +37,11 @@ namespace Assets.Scripts.Game.Actions
             return true;
         }
 
-        public override bool RequiresInRange() => true;
+        public override bool RequiresInRange => true;
         public override void ResetGoap()
         {
             _collectedBranches = false;
-            startTime = 0;
+            _startTime = 0;
         }
     }
 }
