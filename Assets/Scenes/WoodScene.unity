@@ -926,9 +926,6 @@ GameObject:
   - component: {fileID: 2091446085}
   - component: {fileID: 2091446093}
   - component: {fileID: 2091446092}
-  - component: {fileID: 2091446091}
-  - component: {fileID: 2091446090}
-  - component: {fileID: 2091446089}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -1015,51 +1012,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2091446089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091446084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b25d4a2e9d609ed46b2c684776417267, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 1
-  target: {fileID: 0}
-  workDuration: 2
---- !u!114 &2091446090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091446084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bda45f784906e9a499df23f71a330204, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 5
-  target: {fileID: 0}
-  workDuration: 2
---- !u!114 &2091446091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091446084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1126d05c38ac614e93d2ba2723f86c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 1
-  target: {fileID: 0}
-  workDuration: 2
 --- !u!114 &2091446092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,7 +1024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1fc8cf2e00c0f0479837ed60f0d76f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
+  moveSpeed: 10
 --- !u!114 &2091446093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1085,6 +1037,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 683d5798b8c4ad44397877ffafdb9308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actions:
+  - {fileID: 11400000, guid: 349858881e7fe0347a27d5932822bb34, type: 2}
+  - {fileID: 11400000, guid: 369647aa0a572c541b2a3359ea48642b, type: 2}
+  - {fileID: 11400000, guid: af57365ff44b710429874ab87c97be12, type: 2}
   goapDataProvider: {fileID: 2091446092}
 --- !u!1001 &17438624076883409
 PrefabInstance:

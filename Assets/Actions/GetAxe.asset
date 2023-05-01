@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25d4a2e9d609ed46b2c684776417267, type: 3}
   m_Name: GetAxe
   m_EditorClassIdentifier: 
-  cost: 1
+  cost: 2
   target: {fileID: 0}
   workDuration: 0.2

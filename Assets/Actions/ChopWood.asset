@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1126d05c38ac614e93d2ba2723f86c1, type: 3}
   m_Name: ChopWood
   m_EditorClassIdentifier: 
-  cost: 1
+  cost: 2
   target: {fileID: 0}
   workDuration: 2

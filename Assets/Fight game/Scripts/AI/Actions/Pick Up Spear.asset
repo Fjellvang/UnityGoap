@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bda45f784906e9a499df23f71a330204, type: 3}
-  m_Name: CollectBranches
+  m_Script: {fileID: 11500000, guid: ac320d56a2fa40645a7a34bc48f12fbc, type: 3}
+  m_Name: Pick Up Spear
   m_EditorClassIdentifier: 
-  cost: 8
+  cost: 1
   target: {fileID: 0}
-  workDuration: 2
