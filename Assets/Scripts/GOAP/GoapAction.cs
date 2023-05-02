@@ -65,6 +65,10 @@ namespace Assets.Scripts.GOAP
          */
         public abstract bool RequiresInRange { get; }
 
+        public virtual bool IsInRange(GameObject agent)
+        {
+            return agent.transform.position.Equals(target.transform.position);
+        }
 
         /**
          * Are we in range of the target?

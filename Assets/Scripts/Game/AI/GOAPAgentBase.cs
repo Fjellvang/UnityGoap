@@ -18,17 +18,17 @@ namespace Assets.Scripts.Game.AI
 
         public abstract GoapCondition GetWorldState();
 
-        public bool MoveAgent(GoapAction nextAction)
+        public bool MoveAgent(GoapAction currentAction)
         {
             //TODO: not sure i want this here.
             // move towards the NextAction's target
             float step = moveSpeed * Time.deltaTime;
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, nextAction.target.transform.position, step);
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, currentAction.target.transform.position, step);
 
-            if (gameObject.transform.position.Equals(nextAction.target.transform.position))
+            if (currentAction.IsInRange(gameObject))
             {
                 // we are at the target location, we are done
-                nextAction.SetInRange(true);
+                currentAction.SetInRange(true);
                 return true;
             }
             else

@@ -6,14 +6,14 @@ namespace Assets.Scripts.Game.AI
     {
         public override void Update(AIController controller)
         {
-            GOAP.GoapAction nextAction = controller.currentActions.Peek();
-            if (nextAction == null)
+            GOAP.GoapAction currentAction = controller.currentActions.Peek();
+            if (currentAction == null)
             {
                 Debug.Log("Next axtion is null, find new action");
                 controller.stateMachine.TransitionState(findActionState);
             }
 
-            if (controller.goapDataProvider.MoveAgent(nextAction))
+            if (controller.goapDataProvider.MoveAgent(currentAction))
             {
                 controller.stateMachine.TransitionState(performActionState);
             }

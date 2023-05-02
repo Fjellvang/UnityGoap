@@ -1,4 +1,5 @@
 using Assets.Scripts.GOAP;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "FightGame/GoapActions/PickUpSpearAction")]
@@ -47,6 +48,13 @@ public class PickUpSpearAction : GoapAction
         target = closest;
 
         return closest != null;
+    }
+
+    public override bool IsInRange(GameObject agent)
+    {
+        var d = Vector3.Distance(agent.transform.position, target.transform.position);
+
+        return d < 1;//TODO: make configureable
     }
 
     public override bool Perform(GameObject agent)
